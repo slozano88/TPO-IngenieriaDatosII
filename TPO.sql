@@ -112,3 +112,12 @@ SELECT DISTINCT c.*
 FROM E01_CLIENTE c
 INNER JOIN E01_FACTURA f
 ON c.nro_cliente = f.nro_cliente;
+
+
+-- Req 5. Identificar todos los clientes que no tengan registrada ninguna factura.
+
+SELECT c.*
+FROM E01_CLIENTE c
+LEFT JOIN E01_FACTURA f
+ON c.nro_cliente = f.nro_cliente
+WHERE f.nro_factura IS NULL;
