@@ -82,7 +82,7 @@ JOIN E01_TELEFONO t
 ON c.nro_cliente = t.nro_cliente;
 
 
--- Requerimiento 2 | Obtener el/los teléfono/s y el número de cliente del cliente con nombre.
+-- Requerimiento 2 | Obtener los teléfonos y el número de cliente del cliente con nombre.
 
 SELECT
     c.nro_cliente,
@@ -93,3 +93,22 @@ JOIN E01_TELEFONO t
 ON c.nro_cliente = t.nro_cliente
 WHERE c.nombre = 'Jacob'
 AND c.apellido = 'Cooper';
+
+-- Req 3. mostrar cada teléfono junto con los datos del cliente
+ 
+SELECT
+    t.cod_area,
+    t.nro_telefono,
+    t.tipo,
+    c.*
+FROM E01_TELEFONO t
+LEFT JOIN E01_CLIENTE c
+ON t.nro_cliente = c.nro_cliente;
+ 
+ 
+-- Req 4. obtener todos los clientes que tengan registrada al menos una factura
+ 
+SELECT DISTINCT c.*
+FROM E01_CLIENTE c
+INNER JOIN E01_FACTURA f
+ON c.nro_cliente = f.nro_cliente;
