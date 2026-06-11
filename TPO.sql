@@ -121,3 +121,53 @@ FROM E01_CLIENTE c
 LEFT JOIN E01_FACTURA f
 ON c.nro_cliente = f.nro_cliente
 WHERE f.nro_factura IS NULL;
+
+
+-- Req 6. Devolver todos los clientes con la cantidad de facturas registradas.
+-- Si no tienen facturas, mostrar 0.
+
+SELECT
+    c.nro_cliente,
+    c.nombre,
+    c.apellido,
+    c.direccion,
+    c.activo,
+    COUNT(f.nro_factura) AS cantidad_facturas
+FROM E01_CLIENTE c
+LEFT JOIN E01_FACTURA f
+ON c.nro_cliente = f.nro_cliente
+GROUP BY
+    c.nro_cliente,
+    c.nombre,
+    c.apellido,
+    c.direccion,
+    c.activo;
+
+
+-- Req 7. Listar los datos de todas las facturas compradas por Kai Bullock.
+
+SELECT f.*
+FROM E01_FACTURA f
+INNER JOIN E01_CLIENTE c
+ON f.nro_cliente = c.nro_cliente
+WHERE c.nombre = 'Kai'
+AND c.apellido = 'Bullock';
+
+
+-- Req 8. Seleccionar los productos facturados al menos una vez.
+
+SELECT DISTINCT p.*
+FROM E01_PRODUCTO p
+INNER JOIN E01_DETALLE_FACTURA df
+ON p.codigo_producto = df.codigo_producto;
+
+
+-- Req 9. Listar los datos de todas las facturas que contengan productos de la marca “Ipsum”.
+
+SELECT DISTINCT f.*
+FROM E01_FACTURA f
+INNER JOIN E01_DETALLE_FACTURA df
+ON f.nro_factura = df.nro_factura
+INNER JOIN E01_PRODUCTO p
+ON df.codigo_producto = p.codigo_producto
+WHERE p.marca = 'Ipsum';
