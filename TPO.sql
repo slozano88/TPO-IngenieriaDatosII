@@ -171,3 +171,72 @@ ON f.nro_factura = df.nro_factura
 INNER JOIN E01_PRODUCTO p
 ON df.codigo_producto = p.codigo_producto
 WHERE p.marca = 'Ipsum';
+
+-- Req 10. Mostrar nombre y apellido de cada cliente junto con lo que gastó en total, con IVA incluido.
+
+SELECT
+    c.nro_cliente,
+    c.nombre,
+    c.apellido,
+    COALESCE(SUM(f.total_con_iva), 0) AS total_gastado_con_iva
+FROM E01_CLIENTE c
+LEFT JOIN E01_FACTURA f
+ON c.nro_cliente = f.nro_cliente
+GROUP BY
+    c.nro_cliente,
+    c.nombre,
+    c.apellido;
+
+-- Req 11. Vista que devuelva los datos de las facturas ordenadas por fecha.
+
+CREATE OR REPLACE VIEW V_FACTURAS_ORDENADAS AS
+SELECT *
+FROM E01_FACTURA
+ORDER BY fecha;
+
+-- Consulta de la vista
+SELECT * FROM V_FACTURAS_ORDENADAS;
+
+-- Req 12. Vista que devuelva todos los productos que aún no fueron facturados.
+
+CREATE OR REPLACE VIEW V_PRODUCTOS_NO_FACTURADOS AS
+SELECT p.*
+FROM E01_PRODUCTO p
+LEFT JOIN E01_DETALLE_FACTURA df
+ON p.codigo_producto = df.codigo_producto
+WHERE df.codigo_producto IS NULL;
+
+-- Consulta de la vista
+SELECT * FROM V_PRODUCTOS_NO_FACTURADOS;
+
+-- Req 13. Crear nuevos clientes, eliminar y modificar existentes.
+-- Crear cliente
+INSERT INTO E01_CLIENTE (nombre, apellido, direccion, activo)
+VALUES ('Evangelina', 'Ovelar', 'Av. Bunge 123', 1);
+
+-- Modificar cliente
+UPDATE E01_CLIENTE
+SET direccion = 'Av. Shaw 456',
+    activo = 1
+WHERE nro_cliente = 1;
+
+-- Eliminación lógica de cliente
+UPDATE E01_CLIENTE
+SET activo = 0
+WHERE nro_cliente = 1;
+
+-- Eliminación física, solo si no tiene dependencias relacionadas
+DELETE FROM E01_CLIENTE
+WHERE nro_cliente = 1;
+
+-- Req 14. Crear nuevos productos y modificar existentes.
+-- El precio se registra sin IVA.
+-- Crear producto
+INSERT INTO E01_PRODUCTO (marca, nombre, descripcion, precio, stock)
+VALUES ('Ipsum', 'Mouse inalámbrico', 'Mouse óptico USB', 15000.00, 25);
+
+-- Modificar producto
+UPDATE E01_PRODUCTO
+SET precio = 18000.00,
+    stock = 30
+WHERE codigo_producto = 1;
